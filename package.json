@@ -1,0 +1,20 @@
+{
+  "name": "gamevr",
+  "version": "1.0.0",
+  "description": "FIFA VR Games Register",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "deno run --allow-net --allow-run --allow-write index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mourad-Tlili/GameVR.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mourad-Tlili/GameVR/issues"
+  },
+  "homepage": "https://github.com/Mourad-Tlili/GameVR#readme"
+}

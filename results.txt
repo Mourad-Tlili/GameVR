@@ -1,0 +1,1 @@
+{"gameCode":5380,"gameLiveScore":"2:1","gameTime":55,"homeTeam":"Netherlands ","awayTeam":"Portugal ","champName":"EURO VR","gameDate":"2021-12-10T14:34:01Z","longId":200002790317}
