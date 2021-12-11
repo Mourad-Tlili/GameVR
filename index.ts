@@ -1,6 +1,9 @@
 import { Game } from "./game.model.ts";
 //import { writeFileStr } from "https://deno.land/std@0.51.0/fs/mod.ts";
 
+const champsId: string[]:["1000012356","1000012359"]
+
+
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=0&categoryids=0&champids=1000012358&group=AllEvents&outrightsDisplay=none&marketTypeIds=1%2C18&couponType=0&hasLiveStream=false"
 );
@@ -8,6 +11,7 @@ const data = await response.json();
 
 const newGame = new Game();
 let gameArray: Game[] = [];
+let overTimeGamesArray: Game[] = [];
 
 for (var i = 0; i < data.Result.Items[0].Events.length; i++) {
   const longIdd = data.Result.Items[0].Events[i].Id;
@@ -72,38 +76,51 @@ gameArray.sort(function(a, b): any {
   if ((gameArray[i].gameTime as number) < 90) {
     const restTime = 90 - <number>gameArray[i].gameTime;
     console.log(restTime);
+    const realTimeRest = restTime * 9;
     console.log("Read time rest in secondes " + restTime * 9);
+
     //writeFileStr("./results.txt", gameArray[i].gameLiveScore);
     const convertedGameToString = JSON.stringify(gameArray[i]);
 
     Deno.writeTextFile("./results.txt", convertedGameToString);
     console.log(gameArray[i].gameLiveScore);
+    await delay(realTimeRest);
+    console.log("Waited !");
   } else if (
     (gameArray[i].gameTime as number) > 90 ||
     (gameArray[i].gameTime as number) == 90
   ) {
+    overTimeGamesArray.push(gameArray[i], data); //pushing games in 90minutes+ to this array.
+    loopIt(overTimeGamesArray, data, newGame);
     const convertedGameToString = JSON.stringify(gameArray[i]);
-
     Deno.writeTextFile("./results.txt", convertedGameToString);
-    console.log(gameArray[i].gameLiveScore);
 
-    console.log("fel dkika : ", gameArray[i].gameTime);
-    while (gameArray[i] !== undefined) {
-      const response = await fetch(
-        "https://sb1-geteventdetailsapi-altenar.biahosted.com/Sportsbook/GetEventDetails?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&eventId=" +
-          gameArray[i].longId +
-          "&sportId=270"
-      );
-      const data = await response.json();
-      for (var k = 0; k < data.Result.Items[0].Events.length; k++) {
-        newGame.gameLiveScore = data.Result.Items[0].Events[k].LiveScore;
-        console.log("boucle API " + k);
-        console.log(newGame.gameLiveScore);
-      }
-    }
+    //console.log(gameArray[i].gameLiveScore);
+    //console.log("fel dkika : ", gameArray[i].gameTime);
   } else {
-    console.log("shay");
+    console.log("No games for now");
   }
   gameArray.push(newGame);
   console.log(gameArray);
+}
+
+async function loopIt(overTimeGamesArray: any, data: any, newGame: any) {
+  while (overTimeGamesArray[i] !== undefined) {
+    const response = await fetch(
+      "https://sb1-geteventdetailsapi-altenar.biahosted.com/Sportsbook/GetEventDetails?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&eventId=" +
+        overTimeGamesArray[i].longId +
+        "&sportId=270"
+    );
+    const data = await response.json();
+    for (var k = 0; k < data.Result.Items[0].Events.length; k++) {
+      // to fix !!
+      newGame.gameLiveScore = data.Result.Items[0].Events[k].LiveScore;
+      //console.log("boucle API " + k);
+      console.log(newGame.gameLiveScore);
+      Deno.writeTextFile("./results.txt", newGame.gameLiveScore);
+    }
+  }
+}
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms * 1000));
 }

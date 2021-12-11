@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "deno run --allow-net --allow-run --allow-write index.ts"
+    "start": "deno run --allow-net --allow-run --allow-write main.ts",
+    "test": "deno run --allow-net --allow-run --allow-write test.ts"
   },
   "repository": {
     "type": "git",
