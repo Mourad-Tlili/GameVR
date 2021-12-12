@@ -7,4 +7,5 @@ export class Game {
   champName?: String;
   gameDate?: String;
   longId?: BigInt;
+  leagueID?: BigInt;
 }
