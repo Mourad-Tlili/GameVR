@@ -48,14 +48,14 @@ for (let i = 0; i < data.Result.Items[0].Items.length; i++) {
 let sortedArray = liveGamesArray.sort(
   ({ gameTime: a }, { gameTime: b }) => a.valueOf() - b.valueOf()
 );
-
 //console.log(sortedArray);
 //let multiple = false; //Solution to try !
-for (let j = sortedArray.length - 1; j > 0; j--) {
+for (let j = sortedArray.length - 1; j >= 0; j--) {
   //console.log(sortedArray[j].gameTime);
-  if ((await saveLastScore(sortedArray[j])) == 1) {
-    sortedArray.pop();
-    console.log("Game Finished !");
+  if ((await saveLastScore(sortedArray[sortedArray.length - 1])) == 1) {
+    let finishedGame = sortedArray.pop();
+    j--;
+    console.log(`Game ${finishedGame} Finished`);
   }
 
   //saveLastScore(sortedArray[j - 1]);
@@ -71,9 +71,14 @@ async function saveLastScore(game: Game) {
     create: true,
     append: true,
   });
+  let counter = 0;
 
-  if (game.gameTime >= 10) {
+  if (game.gameTime >= 20) {
+    let stopWatch = 0;
+
     while (game.gameTime != undefined) {
+      // console.log(typeof game.gameTime);
+
       const gameID = game.longId; //gameTime
       const response = await fetch(
         "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
@@ -81,15 +86,29 @@ async function saveLastScore(game: Game) {
       const data = await response.json();
       //Open File
       for (let i = 0; i < data.Result.Items[0].Items.length; i++) {
-        const allGames = data?.Result?.Items[0]?.Items[i]?.Events[0];
+        var allGames = data?.Result?.Items[0]?.Items[i]?.Events[0];
         if (allGames.ChampId == game.leagueID && allGames.Id == game.longId) {
-          /*       console.log(allGames.Name);
+          console.log(allGames.Name);
           console.log(allGames.LiveScore);
-          console.log(game.gameTime); */
-
+          console.log("GAME TIMEEEEE ", game.gameTime);
           game.homeTeam = allGames.Competitors[0];
-          game.homeTeam = allGames.Competitors[1];
-          game.gameTime = allGames.LiveCurrentTime;
+          game.awayTeam = allGames.Competitors[1];
+
+          if (typeof allGames.LiveScore != "string") {
+            console.log("wfe !!!!!!!!!!!!!!!!!!!");
+          }
+
+          let z = allGames.LiveCurrentTime.split("'");
+          // console.log(z[0]);
+
+          let d = Number(z[0]); //From JSON
+
+          //console.log(typeof d);
+          game.gameTime = d;
+
+          //console.log(game.gameTime);
+
+          // console.log("TYPE-------" + typeof game.gameTime);
 
           game.gameLiveScore = allGames.LiveScore; //To keep the game Live with exact time.
         }
@@ -97,24 +116,37 @@ async function saveLastScore(game: Game) {
 
         //resultsArray.push(game);
         //ADD function here if(game exist in resultsArray then override it)
-
-        upsert(resultsArray, game);
       }
+
+      let x;
+      if (game.gameTime == x) {
+        stopWatch++;
+      } else {
+        stopWatch = 0;
+      }
+      x = game.gameTime;
+
+      if (stopWatch == 200) {
+        break;
+      }
+
+      upsert(resultsArray, game);
     }
-    //Write only one time issue ! THIS CODE SHOULD NOT BE HERE !
-    /*   Deno.writeTextFile(
+    /* if (game.gameTime == undefined) {
+      return 1;
+    } */
+    Deno.writeTextFile(
       "./results.txt",
       JSON.stringify(resultsArray[resultsArray.length - 1]),
       {
         append: true,
       }
-    ); */
-    return 1;
+    );
+    //Write only one time issue ! THIS CODE SHOULD NOT BE HERE !
   } else {
     console.log("Akal mel 90");
     return -1;
   }
-  return 0;
 }
 
 function upsert(resultsArray: any[], game: Game) {
@@ -123,7 +155,8 @@ function upsert(resultsArray: any[], game: Game) {
   if (i > -1) {
     resultsArray[i] = game;
     //return 1;
-    console.log("------------------Override------------------");
+
+    console.log("------------------Override------------------", game.gameTime);
   }
   // (2)
   else {
@@ -131,9 +164,13 @@ function upsert(resultsArray: any[], game: Game) {
     console.log("------------------PUSH------------------");
     // return -1;
   }
-  console.log(resultsArray.length);
-}
+  //console.log("Results Array Length 137 " + resultsArray.length);
+  //console.log(resultsArray);
+  //  console.log(resultsArray);
 
+  return resultsArray;
+}
+/* 
 function IfGameExistInArray(resultsArray: any[], game: Game) {
   for (var i = resultsArray.length; i < 0; i--) {
     if (resultsArray[i].longId == game.longId) {
@@ -143,7 +180,7 @@ function IfGameExistInArray(resultsArray: any[], game: Game) {
     }
     return resultsArray;
   }
-}
+} */
 //Delay function
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms * 1000));
