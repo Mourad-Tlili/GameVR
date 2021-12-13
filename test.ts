@@ -48,12 +48,17 @@ for (let i = 0; i < data.Result.Items[0].Items.length; i++) {
 let sortedArray = liveGamesArray.sort(
   ({ gameTime: a }, { gameTime: b }) => a.valueOf() - b.valueOf()
 );
-console.log(sortedArray);
-let multiple = false;
+
+//console.log(sortedArray);
+//let multiple = false; //Solution to try !
 for (let j = sortedArray.length - 1; j > 0; j--) {
-  console.log(sortedArray[j].gameTime);
-  saveLastScore(sortedArray[j]);
-  saveLastScore(sortedArray[j - 1]);
+  //console.log(sortedArray[j].gameTime);
+  if ((await saveLastScore(sortedArray[j])) == 1) {
+    sortedArray.pop();
+    console.log("Game Finished !");
+  }
+
+  //saveLastScore(sortedArray[j - 1]);
   //NEED SOLUTION HERE TO ITERATE NEXT GAME AFTER FINISHING ONE !
 }
 async function saveLastScore(game: Game) {
@@ -62,7 +67,12 @@ async function saveLastScore(game: Game) {
   } */
   const resultsArray: Game[] = [];
 
-  if (game.gameTime >= 70) {
+  const file = Deno.openSync("./results.txt", {
+    create: true,
+    append: true,
+  });
+
+  if (game.gameTime >= 10) {
     while (game.gameTime != undefined) {
       const gameID = game.longId; //gameTime
       const response = await fetch(
@@ -70,17 +80,12 @@ async function saveLastScore(game: Game) {
       );
       const data = await response.json();
       //Open File
-      const file = Deno.openSync("./results.txt", {
-        create: true,
-        append: true,
-      });
-
       for (let i = 0; i < data.Result.Items[0].Items.length; i++) {
         const allGames = data?.Result?.Items[0]?.Items[i]?.Events[0];
         if (allGames.ChampId == game.leagueID && allGames.Id == game.longId) {
-          console.log(allGames.Name);
+          /*       console.log(allGames.Name);
           console.log(allGames.LiveScore);
-          console.log(game.gameTime);
+          console.log(game.gameTime); */
 
           game.homeTeam = allGames.Competitors[0];
           game.homeTeam = allGames.Competitors[1];
@@ -89,31 +94,57 @@ async function saveLastScore(game: Game) {
           game.gameLiveScore = allGames.LiveScore; //To keep the game Live with exact time.
         }
         //ADDING RESULTS TO ARRAY BEFORE WRITING IN FILE (ONLY write in file the last added value in this array for every GAME !! )
-        resultsArray.push(game);
+
+        //resultsArray.push(game);
+        //ADD function here if(game exist in resultsArray then override it)
+
+        upsert(resultsArray, game);
       }
     }
     //Write only one time issue ! THIS CODE SHOULD NOT BE HERE !
-    Deno.writeTextFile(
+    /*   Deno.writeTextFile(
       "./results.txt",
       JSON.stringify(resultsArray[resultsArray.length - 1]),
       {
         append: true,
       }
-    );
+    ); */
+    return 1;
   } else {
     console.log("Akal mel 90");
+    return -1;
   }
-  return;
+  return 0;
 }
 
+function upsert(resultsArray: any[], game: Game) {
+  // (1)
+  const i = resultsArray.findIndex((_game) => _game === game);
+  if (i > -1) {
+    resultsArray[i] = game;
+    //return 1;
+    console.log("------------------Override------------------");
+  }
+  // (2)
+  else {
+    resultsArray.push(game);
+    console.log("------------------PUSH------------------");
+    // return -1;
+  }
+  console.log(resultsArray.length);
+}
+
+function IfGameExistInArray(resultsArray: any[], game: Game) {
+  for (var i = resultsArray.length; i < 0; i--) {
+    if (resultsArray[i].longId == game.longId) {
+      resultsArray[i] = game;
+    } else {
+      resultsArray.push(game);
+    }
+    return resultsArray;
+  }
+}
 //Delay function
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms * 1000));
 }
-
-/* function undefinedGames(game: Game) {
-  const response = await fetch(
-    "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
-  );
-  const data = await response.json();
-} */
