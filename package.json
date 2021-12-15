@@ -6,7 +6,7 @@
   "scripts": {
     "test": "deno run --allow-net --allow-run --allow-write test.ts",
     "start": "deno run --allow-net --allow-run --allow-write main.ts",
-    "track": "deno run --allow-net --allow-run --allow-write track.ts",
+    "track": "deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable TrackGame/track.ts",
     "collect": "deno run --allow-net --allow-run --allow-write collect.ts"
   },
   "repository": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Mourad-Tlili/GameVR#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "typescript": "^4.5.3"
   }
 }

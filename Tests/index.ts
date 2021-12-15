@@ -1,4 +1,4 @@
-import { Game } from "./game.model.ts";
+import { Game } from "../Models/game.model.ts";
 //import { writeFileStr } from "https://deno.land/std@0.51.0/fs/mod.ts";
 
 const champsId: string[]:["1000012356","1000012359"]

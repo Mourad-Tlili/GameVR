@@ -1,4 +1,4 @@
-import { Game } from "./game.test.ts";
+import { Game } from "../Models/game.test";
 
 const champsId: string[] = [
   "1000012356",
