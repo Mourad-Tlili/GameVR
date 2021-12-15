@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "deno run --allow-net --allow-run --allow-write test.ts",
-    "start": "deno run --allow-net --allow-run --allow-write main.ts"
+    "start": "deno run --allow-net --allow-run --allow-write main.ts",
+    "track": "deno run --allow-net --allow-run --allow-write track.ts",
+    "collect": "deno run --allow-net --allow-run --allow-write collect.ts"
   },
   "repository": {
     "type": "git",
