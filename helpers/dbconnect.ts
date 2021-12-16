@@ -1,8 +1,12 @@
 // importing the deno_mongo package from url
-import { MongoClient } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
+import { MongoClient, Bson } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
 
-// Intialize the plugin
-// await init();
+// inserting into the db
+interface GameSchema {
+  _id: { $oid: string };
+  gameLiveScore: string;
+  champName: string;
+}
 
 // Create client
 const client = new MongoClient();
@@ -14,6 +18,6 @@ const dbname: string = "GameVR";
 const db = client.database(dbname);
 
 // Declare the collections here. Here we are using only one collection (i.e friends).
-const GameCollection = db.collection("games");
+const GameCollection = db.collection<GameSchema>("games");
 
 export { db, GameCollection };

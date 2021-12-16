@@ -63,19 +63,26 @@ let sortedArray = liveGamesArray.sort(
   ({ gameTime: a }, { gameTime: b }) => a.valueOf() - b.valueOf()
 );
 
-let j = sortedArray.length - 1;
-let resultsData = await saveLastScore(sortedArray[j]);
+let toggle = false;
+for (let j = sortedArray.length - 1; j >= 0; j--) {
+  let resultsData = await saveLastScore(sortedArray[j]);
 
-if (resultsData == 1) {
-  j--;
-  let finishedGame = sortedArray.pop();
-  console.log(finishedGame);
-  console.log(`Game ${finishedGame} has FINISHED !`);
+  if (toggle == true) {
+    // console.log(sortedArray);
+    sortedArray.pop();
+  }
+  if (resultsData == 1) {
+    //let finishedGame = sortedArray.pop();
+    // console.log("Sorted = ", sortedArray);
+    toggle = true;
+    //console.log(`Game ${finishedGame} has FINISHED !`);
+  } else {
+    console.log("Other games are less than 90 ");
+  }
 }
-
 async function saveLastScore(game: Game) {
   const resultsArray: Game[] = [];
-  while (game.gameTime >= 50) {
+  while (game.gameTime >= 60) {
     const gameID = game.longId; //gameTime
     const isLiveAPI = await fetch(
       "https://sb1capi-altenar.biahosted.com/Sportsbook/GetEventExternalInfo?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&deviceType=Desktop&numformat=en&eventId=" +
@@ -107,8 +114,11 @@ async function saveLastScore(game: Game) {
       console.log(newResultsArray.length);
       break;
     }
+    let gameLastResult = gameResults;
     if (!isLive) {
       // ROUTES
+      //redirect("/addGame");
+      addGame(gameLastResult, gameLastResult);
       console.log("Game Finished !");
       return 1;
     } else {

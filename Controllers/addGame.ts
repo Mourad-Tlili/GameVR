@@ -4,18 +4,20 @@ import { Game } from "../Models/game.test.ts";
 export const addGame = async (context: any, game: Game) => {
   try {
     // inserting into the db
-    const game = new Game();
-    game.champName = "Djayja's League !";
     const gameInserted = await GameCollection.insertOne(game);
     console.log("SUCCES !");
 
     // sending the response
-    context.response.body = gameInserted;
+    //    const decoder = new TextDecoder();
+
+    console.log("---------------------INSERTED----------------", gameInserted);
+    context.response = gameInserted;
     context.response.status = 201;
   } catch (e) {
     // when the insertion fails
     context.response.body = null;
     context.response.status = 500;
+
     console.log(e);
   }
 };
