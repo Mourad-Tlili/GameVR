@@ -3,10 +3,22 @@ import { MongoClient, Bson } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
 
 // inserting into the db
 interface GameSchema {
-  _id: { $oid: string };
-  gameLiveScore: string;
-  champName: string;
+  gameTime?: Number;
+  gameCode?: Number;
+  gameDate?: string;
+  champName?: string;
+  homeTeam?: string;
+  awayTeam?: string;
+  gameLiveScore?: string;
 }
+
+/*       newGame.gameCode = data.Result.EventId;
+      newGame.gameTime = data.Result.LiveCurrentTime;
+      newGame.gameDate = data.Result.EventDate;
+      newGame.champName = data.Result.Name;
+      newGame.homeTeam = data.Result.Competitors[0].Name;
+      newGame.awayTeam = data.Result.Competitors[1].Name;
+      newGame.gameLiveScore = data.Result.LiveScore; */
 
 interface GameIDSchema {
   _id: { $oid: string };
@@ -26,4 +38,4 @@ const db = client.database(dbname);
 const GameCollection = db.collection<GameSchema>("games");
 const GameIDCollection = db.collection<GameIDSchema>("gamesID");
 
-export { db, GameCollection, GameIDCollection };
+export { db, GameCollection, GameIDCollection, GameSchema };

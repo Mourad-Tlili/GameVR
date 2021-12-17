@@ -4,12 +4,11 @@ import { GameIDCollection } from "../helpers/dbconnect.ts";
 export const getGamesID: any = async () => {
   try {
     const data = await GameIDCollection.find({}).toArray();
+
     if (data) {
       console.log(
-        "----------------------THIS IS RETURNED DATA----------------------",
-        data
+        "----------------------THIS IS RETURNED DATA----------------------"
       );
-
       return data;
     } else {
       return 0;
