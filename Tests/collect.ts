@@ -1,10 +1,15 @@
 import { Game } from "../Models/game.test.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import { addGameID } from "../Controllers/addGameID.ts";
+import { ifExists } from "../Controllers/ifExists.ts";
+import { getGamesID } from "../Controllers/getGamesID.ts";
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
 );
 const testData = await response.json();
 let variable = testData.Result.Items[0].Items.length;
+
 while (testData.Result.Items[0].Items.length == variable) {
   const response = await fetch(
     "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
@@ -18,21 +23,49 @@ while (testData.Result.Items[0].Items.length == variable) {
 
     const longId = allGames.Id;
     liveGamesIdArray.push(longId);
-    console.log(upsert(liveGamesIdArray, longId));
+    // console.log(allGames.Competitors[0]);
+    //console.log(allGames.Competitors[1]);
+    console.log("liveGamesIdArray", liveGamesIdArray);
+    let results = upsert(liveGamesIdArray, longId);
+
+    let ifExistsVar = ifExists(results[i]);
+    ifExistsVar.then(function (result: Number) {
+      if (result == -1) {
+        console.log(`This ID ${results[i]} exists already !`);
+      } else {
+        addGameID(results[i], results[i]);
+      }
+    });
   }
+  console.log("-----------DELAY-----------");
+  //convertData();
+  //console.log(obj.values());
+
+  await delay(60);
 }
 
-/* for (let i = 0; i <= liveGamesIdArray.length - 1; i++) {
-  const response = await fetch(
-    "https://sb1capi-altenar.biahosted.com/Sportsbook/GetEventTrackerInfo?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&deviceType=Desktop&numformat=en&eventId=" +
-      liveGamesIdArray[i]
-  );
-  const finalResults = await response.json();
-  console.log(finalResults);
+function convertData() {
+  let res = getGamesID().then(function (result: any) {
+    if (result) {
+      return result;
+    } else {
+      return 0;
+    }
+  });
+  return res;
+}
+
+/* TimeLine();
+
+function timeLine() {
+  setTimeout(function () {
+    ConvertData();
+  }, 1000);
 } */
+
 //Delay function
 function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms * 10000));
+  return new Promise((resolve) => setTimeout(resolve, ms * 1000));
 }
 
 function upsert(resultsArray: any[], longId: BigInt) {

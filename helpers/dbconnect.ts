@@ -8,6 +8,11 @@ interface GameSchema {
   champName: string;
 }
 
+interface GameIDSchema {
+  _id: { $oid: string };
+  longId: BigInt;
+}
+
 // Create client
 const client = new MongoClient();
 // Connect to mongodb
@@ -19,5 +24,6 @@ const db = client.database(dbname);
 
 // Declare the collections here. Here we are using only one collection (i.e friends).
 const GameCollection = db.collection<GameSchema>("games");
+const GameIDCollection = db.collection<GameIDSchema>("gamesID");
 
-export { db, GameCollection };
+export { db, GameCollection, GameIDCollection };
