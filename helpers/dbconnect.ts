@@ -4,21 +4,13 @@ import { MongoClient, Bson } from "https://deno.land/x/mongo@v0.28.0/mod.ts";
 // inserting into the db
 interface GameSchema {
   gameTime?: Number;
-  gameCode?: Number;
+  longId?: Number;
   gameDate?: string;
   champName?: string;
   homeTeam?: string;
   awayTeam?: string;
   gameLiveScore?: string;
 }
-
-/*       newGame.gameCode = data.Result.EventId;
-      newGame.gameTime = data.Result.LiveCurrentTime;
-      newGame.gameDate = data.Result.EventDate;
-      newGame.champName = data.Result.Name;
-      newGame.homeTeam = data.Result.Competitors[0].Name;
-      newGame.awayTeam = data.Result.Competitors[1].Name;
-      newGame.gameLiveScore = data.Result.LiveScore; */
 
 interface GameIDSchema {
   _id: { $oid: string };
@@ -28,7 +20,12 @@ interface GameIDSchema {
 // Create client
 const client = new MongoClient();
 // Connect to mongodb
-await client.connect("mongodb://127.0.0.1:27017" || "");
+//await client.connect("mongodb://127.0.0.1:27017" || "");
+//mongodb+srv://<username>:<password>@cluster0.pawj3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+await client.connect(
+  "mongodb+srv://mimou:Mimou123@cluster0.pawj3.mongodb.net/GameVR?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1" ||
+    ""
+);
 
 // Specifying the database name
 const dbname: string = "GameVR";

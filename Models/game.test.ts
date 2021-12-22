@@ -1,5 +1,5 @@
 export class Game {
-  gameCode?: Number;
+  //  gameCode?: Number;
   gameLiveScore?: String;
   gameTime?: Number;
   homeTeam?: String;

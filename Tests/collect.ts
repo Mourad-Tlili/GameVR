@@ -8,9 +8,16 @@ import { getGamesID } from "../Controllers/getGamesID.ts";
 import { addGameCollect } from "../Controllers/addGameCollect.ts";
 import { getSameGames } from "../Controllers/getSameGames.ts";
 
+import { serve } from "https://deno.land/std@0.57.0/http/server.ts"; //For Heroku
+import { parse } from "https://deno.land/std/flags/mod.ts"; //For Heroku
+const { args } = Deno; //For Heroku
+const argPort = parse(args).port; //For Heroku
+
 const router = new Router();
 const app = new Application();
 const PORT = 3000;
+
+const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
 // Starting the server
 app.use(router.routes());
@@ -27,6 +34,9 @@ let variable = testData.Result.Items[0].Items.length;
 //User Input !
 const buf = new Uint8Array(1024);
 console.log("Choose an Option : ");
+console.log("1- Get Same Games  : ");
+console.log("2- Run collect ID  : ");
+
 const n = await Deno.stdin.read(buf);
 
 if (n == Deno.EOF) {
@@ -45,8 +55,10 @@ if (n == Deno.EOF) {
         console.log("THIS IS RESULT ", game);
       });
     });
-  } else {
+  } else if (userInput == 2) {
     mainFunc(testData, variable);
+  } else {
+    console.log("WRONG CHOICE !");
   }
 }
 
@@ -80,8 +92,8 @@ async function mainFunc(testData: any, variable: any) {
     }
     console.log("-----------DELAY-----------");
     //console.log(obj.values());
-    convertData();
-    await delay(60);
+    //convertData();
+    await delay(3);
   }
 }
 
