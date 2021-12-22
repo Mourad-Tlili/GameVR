@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "deno run --allow-net --allow-run --allow-write test.ts",
-    "start": "deno run --allow-net --allow-run --allow-write main.ts",
-    "track": "deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable TrackGame/track.ts",
-    "collect": "deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable Tests/collect.ts"
+    "start": "deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable Tests/collect.ts",
+    "track": "deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable TrackGame/track.ts"
   },
   "repository": {
     "type": "git",
