@@ -1,1 +1,1 @@
-web: deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable Tests/collect.ts
+web: deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable --isolatedModules Tests/collect.ts

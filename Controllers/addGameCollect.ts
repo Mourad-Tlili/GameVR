@@ -25,24 +25,20 @@ return result }) == -1){
 };
 } */
 
+import { GameCollection } from "../helpers/dbconnect.ts";
+import type { GameSchema } from "../helpers/dbconnect.ts";
 
-import { GameCollection, GameSchema } from "../helpers/dbconnect.ts";
 import { Game } from "../Models/game.test.ts";
 // This is the function that adds a friend to the database.
 export const addGameCollect = async (game: GameSchema) => {
   try {
-
-      const gameInserted = await GameCollection.insertOne(game);
-      console.log("SUCCES !");
+    const gameInserted = await GameCollection.insertOne(game);
+    console.log("SUCCES !");
 
     console.log("---------------------INSERTED----------------", gameInserted);
-
-
-   catch (e) {
+  } catch (e) {
     // when the insertion fails
 
-    console.log(e); 
+    console.log(e);
   }
-  
 };
-}

@@ -34,5 +34,5 @@ const db = client.database(dbname);
 // Declare the collections here. Here we are using only one collection (i.e friends).
 const GameCollection = db.collection<GameSchema>("games");
 const GameIDCollection = db.collection<GameIDSchema>("gamesID");
-
+// @ts-ignore
 export { db, GameCollection, GameIDCollection, GameSchema };
