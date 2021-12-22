@@ -7,6 +7,7 @@ import { ifExists } from "../Controllers/ifExists.ts";
 import { getGamesID } from "../Controllers/getGamesID.ts";
 import { addGameCollect } from "../Controllers/addGameCollect.ts";
 import { getSameGames } from "../Controllers/getSameGames.ts";
+import pogo from "https://deno.land/x/pogo/main.ts";
 
 import { serve } from "https://deno.land/std@0.57.0/http/server.ts"; //For Heroku
 import { parse } from "https://deno.land/std/flags/mod.ts"; //For Heroku
@@ -17,13 +18,22 @@ const router = new Router();
 const app = new Application();
 const PORT = 3000;
 
-const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
+//const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
 // Starting the server
+
 app.use(router.routes());
 app.use(router.allowedMethods());
+
 app.listen({ port: PORT });
+
 console.log("Game running on port ", PORT);
+const server = pogo.server({ port: PORT });
+
+server.router.get("/", () => {
+  return "Game VR is Running... ! !";
+});
+server.start();
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
@@ -49,12 +59,12 @@ if (n == Deno.EOF) {
 
     let sameGamesArray = getSameGames("Kasimpasa vs. Fenerbahce");
     /*   gamesIdArray.then(function (value: any) {
-    value.forEach(async function (valueID: any) { */
+    value.forEach(async function (valueID: any) { 
     sameGamesArray.then(function (value: any) {
       value.forEach(async function (game: any) {
         console.log("THIS IS RESULT ", game);
       });
-    });
+    });*/
   } else if (userInput == 2) {
     mainFunc(testData, variable);
   } else {
