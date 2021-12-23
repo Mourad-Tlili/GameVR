@@ -1,1 +1,1 @@
-web: deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable Tests/collect.ts --host=0.0.0.0 --port=${PORT:3000}
+web: deno run --allow-net --allow-write --allow-read --allow-ffi --allow-env --unstable Tests/collect.ts --host=0.0.0.0 --port=${PORT}

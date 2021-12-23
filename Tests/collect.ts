@@ -16,28 +16,24 @@ const argPort = parse(args).port; //For Heroku
 
 const router = new Router();
 const app = new Application();
-let PORT = Deno.env.get("PORT") || 80;
+let PORT = Number(Deno.env.get("PORT") || 8080);
 
-const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
+//const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
 // Starting the server
 
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-router.get("/", (ctx) => {
-  ctx.response.body = "This is main page";
-});
-
 //app.listen(PORT);
 
 console.log("Game running on port ", PORT);
-/* const server = pogo.server({ port: PORT });
+const server = pogo.server({ port: PORT });
 
 server.router.get("/", () => {
   return "Game VR is Running ... ! !";
 });
-server.start(); */
+server.start();
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
