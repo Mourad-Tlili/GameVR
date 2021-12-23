@@ -7,7 +7,7 @@ import { ifExists } from "../Controllers/ifExists.ts";
 import { getGamesID } from "../Controllers/getGamesID.ts";
 import { addGameCollect } from "../Controllers/addGameCollect.ts";
 import { getSameGames } from "../Controllers/getSameGames.ts";
-//import pogo from "https://deno.land/x/pogo/main.ts";
+import pogo from "https://deno.land/x/pogo/main.ts";
 
 import { serve } from "https://deno.land/std@0.79.0/http/server.ts"; //For Heroku
 import { parse } from "https://deno.land/std/flags/mod.ts"; //For Heroku
@@ -27,12 +27,12 @@ app.use(router.allowedMethods());
 
 app.listen({ port: PORT });
 console.log("Game running on port ", PORT);
-/* const server = pogo.server({ port: PORT });
- */
-/* server.router.get("/", () => {
+const server = pogo.server({ port: PORT });
+
+server.router.get("/", () => {
   return "Game VR is Running... ! !";
 });
-server.start(); */
+server.start();
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
