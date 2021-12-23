@@ -16,7 +16,7 @@ const argPort = parse(args).port; //For Heroku
 
 const router = new Router();
 const app = new Application();
-let PORT = Deno.env.get("PORT") || 3003;
+let PORT = Deno.env.get("PORT") || 80;
 
 //const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
