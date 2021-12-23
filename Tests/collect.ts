@@ -18,7 +18,7 @@ const router = new Router();
 const app = new Application();
 let PORT = Number(Deno.env.get("PORT") || 8080);
 
-//const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
+const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
 // Starting the server
 
