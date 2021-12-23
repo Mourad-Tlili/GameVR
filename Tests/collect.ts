@@ -28,12 +28,17 @@ app.use(router.allowedMethods());
 //app.listen(PORT);
 
 console.log("Game running on port ", PORT);
-const server = pogo.server({ port: PORT });
+/* const server = pogo.server({ port: PORT });
 
 server.router.get("/", () => {
   return "Game VR is Running ... ! !";
 });
-server.start();
+server.start(); */
+
+// Respond to each request with a "Hello World!" HTML page
+for await (const req of s) {
+  req.respond({ body: "Hello World!" });
+}
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
