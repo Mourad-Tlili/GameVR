@@ -25,12 +25,12 @@ const PORT = 3000;
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen({ port: PORT });
+//app.listen({ port: PORT });
 console.log("Game running on port ", PORT);
-const server = pogo.server({ port: 3001 });
+const server = pogo.server({ port: PORT });
 
 server.router.get("/", () => {
-  return "Game VR is Running... ! !";
+  return "Game VR is Running ... ! !";
 });
 server.start();
 
