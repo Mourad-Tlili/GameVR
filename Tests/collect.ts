@@ -16,9 +16,7 @@ const { args, exit } = Deno; //For Heroku
 
 const router = new Router();
 const app = new Application();
-//const DEFAULT_PORT = Number(config()["PORT"]) || 8000;
-const DEFAULT_PORT = 3000 || 8000;
-
+const DEFAULT_PORT = Number(config()["PORT"]) || 8000;
 const argPort = flags.parse(args).port;
 let PORT = argPort ? Number(argPort) : DEFAULT_PORT;
 
