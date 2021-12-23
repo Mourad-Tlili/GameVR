@@ -16,7 +16,7 @@ const argPort = parse(args).port; //For Heroku
 
 const router = new Router();
 const app = new Application();
-const PORT = 3000;
+const PORT = 3000 || 8080;
 
 //const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
@@ -105,7 +105,7 @@ async function mainFunc(testData: any, variable: any) {
     console.log("-----------DELAY-----------");
     //console.log(obj.values());
     //convertData();
-    //await delay(10);
+    await delay(6);
   }
 }
 
