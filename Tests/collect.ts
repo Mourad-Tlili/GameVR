@@ -74,7 +74,7 @@ if (n == Deno.EOF) {
     console.log("WRONG CHOICE !");
   }
 } */
-//mainFunc(testData, variable);
+mainFunc(testData, variable);
 
 async function mainFunc(testData: any, variable: any) {
   while (testData.Result.Items[0].Items.length == variable) {
