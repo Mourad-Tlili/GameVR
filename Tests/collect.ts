@@ -1,7 +1,7 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
 import * as flags from "https://deno.land/std/flags/mod.ts";
-
+import { config } from "https://deno.land/x/dotenv/mod.ts";
 import { Game } from "../Models/game.test.ts";
 import { addGameID } from "../Controllers/addGameID.ts";
 import { ifExists } from "../Controllers/ifExists.ts";
@@ -16,9 +16,8 @@ const { args, exit } = Deno; //For Heroku
 
 const router = new Router();
 const app = new Application();
-const DEFAULT_PORT = 8000;
+const DEFAULT_PORT = Number(config()["PORT"]) || 8000;
 const argPort = flags.parse(args).port;
-
 let PORT = argPort ? Number(argPort) : DEFAULT_PORT;
 
 //const s = serve({ port: PORT }); //For Heroku
@@ -43,7 +42,6 @@ const response = await fetch(
 const testData = await response.json();
 let variable = testData.Result.Items[0].Items.length;
 
-router.get("/", mainFunc);
 /* 
 //User Input !
 const buf = new Uint8Array(1024);
@@ -75,7 +73,7 @@ if (n == Deno.EOF) {
     console.log("WRONG CHOICE !");
   }
 } */
-mainFunc(testData, variable);
+//mainFunc(testData, variable);
 
 async function mainFunc(testData: any, variable: any) {
   while (testData.Result.Items[0].Items.length == variable) {
