@@ -16,7 +16,7 @@ const argPort = parse(args).port; //For Heroku
 
 const router = new Router();
 const app = new Application();
-const PORT = 3000 || 8080;
+let PORT = Deno.env.get("PORT") || 3003;
 
 //const s = serve({ port: argPort ? Number(argPort) : PORT }); //For Heroku
 
@@ -29,7 +29,8 @@ router.get("/", (ctx) => {
   ctx.response.body = "This is main page";
 });
 
-app.listen({ port: PORT });
+//app.listen(PORT);
+
 console.log("Game running on port ", PORT);
 /* const server = pogo.server({ port: PORT });
 
