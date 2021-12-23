@@ -30,8 +30,10 @@ app.use(router.allowedMethods());
 console.log("Game running on port ", PORT);
 const server = pogo.server({ port: PORT });
 
-router.get("/", () => {
-  return "Game VR is Running ... ! !";
+router.get("/", ({ response }: { response: any }) => {
+  response.body = {
+    message: "hello world",
+  };
 });
 await app.listen({ port: PORT });
 
