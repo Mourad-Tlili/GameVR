@@ -1,5 +1,6 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
+import * as flags from "https://deno.land/std/flags/mod.ts";
 
 import { Game } from "../Models/game.test.ts";
 import { addGameID } from "../Controllers/addGameID.ts";
@@ -11,12 +12,14 @@ import pogo from "https://deno.land/x/pogo/main.ts";
 
 import { serve } from "https://deno.land/std@0.79.0/http/server.ts"; //For Heroku
 import { parse } from "https://deno.land/std/flags/mod.ts"; //For Heroku
-const { args } = Deno; //For Heroku
-const argPort = parse(args).port; //For Heroku
+const { args, exit } = Deno; //For Heroku
 
 const router = new Router();
 const app = new Application();
-let PORT = 3000 || 8080;
+const DEFAULT_PORT = 8000;
+const argPort = flags.parse(args).port;
+
+let PORT = argPort ? Number(argPort) : DEFAULT_PORT;
 
 //const s = serve({ port: PORT }); //For Heroku
 
@@ -25,8 +28,6 @@ let PORT = 3000 || 8080;
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen({ port: PORT });
-
 console.log("Game running on port ", PORT);
 /* const server = pogo.server({ port: PORT });
 
@@ -34,6 +35,7 @@ server.router.get("/", () => {
   return "Game VR is Running ... ! !";
 });
 server.start(); */
+await app.listen({ port: PORT });
 
 const response = await fetch(
   "https://sb1capi-altenar.biahosted.com/Sportsbook/GetLiveEvents?timezoneOffset=-60&langId=39&skinName=dreamsbet365_21&configId=1&culture=fr-FR&countryCode=TN&deviceType=Desktop&numformat=en&sportids=270&categoryids=0&champids=0&group=Championship&outrightsDisplay=none&couponType=0&filterSingleNodes=2&hasLiveStream=false"
@@ -41,6 +43,7 @@ const response = await fetch(
 const testData = await response.json();
 let variable = testData.Result.Items[0].Items.length;
 
+router.get("/", mainFunc);
 /* 
 //User Input !
 const buf = new Uint8Array(1024);
@@ -72,7 +75,6 @@ if (n == Deno.EOF) {
     console.log("WRONG CHOICE !");
   }
 } */
-
 mainFunc(testData, variable);
 
 async function mainFunc(testData: any, variable: any) {
