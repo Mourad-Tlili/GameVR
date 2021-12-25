@@ -107,7 +107,7 @@ async function mainFunc(testData: any, variable: any) {
     console.log("-----------DELAY-----------");
     //console.log(obj.values());
     //convertData();
-    await delay(6);
+    await delay(60);
   }
 }
 
