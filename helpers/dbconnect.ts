@@ -23,7 +23,7 @@ const client = new MongoClient();
 //await client.connect("mongodb://127.0.0.1:27017" || "");
 //mongodb+srv://<username>:<password>@cluster0.pawj3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 await client.connect(
-  "mongodb+srv://mimou:Mimou123@cluster0.pawj3.mongodb.net/GameVR?retryWrites=true&w=majority&authMechanism=SCRAM-SHA-1" ||
+  "" ||
     ""
 );
 
